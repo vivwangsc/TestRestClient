@@ -21,7 +21,20 @@ namespace TestRestClient
         //静态的基础地址
         public String EntityName { get; set; }
 
-        public  DataTable getData() 
+        /// <summary>
+        /// 获取类对应的远程服务地址
+        /// </summary>
+        /// <returns></returns>
+        private String getWeburl()
+        {
+            MemberInfo typeinfo = typeof(T);
+            //调用GetCustomAttributes方法获取与BookAttribute类有关的属性列表，该方法返回一个对象数组
+            WeburlAttribute attr = typeinfo.GetCustomAttribute(typeof(WeburlAttribute)) as WeburlAttribute;
+            return attr.WebUrl;
+        }
+
+
+        public DataTable getData() 
         {
             //WebapiClient
             List<T>  list = getList();
