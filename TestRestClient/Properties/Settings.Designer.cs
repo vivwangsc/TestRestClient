@@ -32,5 +32,15 @@ namespace TestRestClient.Properties {
                 return ((string)(this["ruoyiConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("server=www.y8848.cn;user id=wsc;persistsecurityinfo=True;database=ruoyi")]
+        public string ruoyiConnectionString1 {
+            get {
+                return ((string)(this["ruoyiConnectionString1"]));
+            }
+        }
     }
 }

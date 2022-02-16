@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,8 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestRestClient.ruoyi;
@@ -59,6 +62,43 @@ namespace TestRestClient
 
             //sys_config sconfig = new sys_config(null);
             //sconfig.config_key = 
+
+
+
+
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            var client = new RestClient("http://localhost:99/app/");
+            var request = new RestRequest("system/config/list");
+            request.AddHeader("token", Token);
+            //var sout = await client.PostAsync(request);
+            //richTextBox1.Text = sout.Content;
+
+            var sout = await client.PostAsync<AjaxResult>(request);
+            richTextBox1.Text = sout.data.ToString();
+            JsonSerializerSettings jsSetting = new JsonSerializerSettings();
+            jsSetting.NullValueHandling = NullValueHandling.Ignore;
+            List<sys_config> list = JsonConvert.DeserializeObject<List<sys_config>>(sout.data.ToString(), jsSetting);
+            sys_config s1 = list[0];
+            sys_config ss = new sys_config();
+            s1.config_value = s1.config_value + "wsc";
+            var upDateRequest = new RestRequest("system/config/doEdit");
+            upDateRequest.AddJsonBody<sys_config>(s1);
+            var options = new JsonSerializerOptions();
+            //options.IgnoreNullValues = true;
+            options.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            options.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+
+
+
+            String s3 = System.Text.Json.JsonSerializer.Serialize(s1,options);
+            IsoDateTimeConverter timeConverter = new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" };
+            String s = JsonConvert.SerializeObject(s1,timeConverter);
+            upDateRequest.AddHeader("token", Token);
+            var sout1 = await client.PostAsync<AjaxResult>(upDateRequest);
+            richTextBox1.Text = s3;
 
 
 
